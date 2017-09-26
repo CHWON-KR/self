@@ -27,8 +27,8 @@ library(dplyr)
 
 2)사용할 컬럼만 추출
 
-"dplyr"패키지를 이용하여 등급별 우불량 구성비 생성
-
+-"dplyr"패키지를 이용하여 등급별 우불량 구성비 생성
+- TARGET 
 ```{r, echo=TRUE, eval=FALSE}
 #dplyr문법 : 데이터셋 %>% 명령어 (select, filter, mutate등 )
 good <- data_1 %>% select(TARGET,최종등급_4) %>% filter(TARGET==0) #우량추출
@@ -86,4 +86,4 @@ grd3 <- grd2 %>% mutate(g_cum=cumsum(g_rate)
 
 - 테이블 생성 결과 (KS & WOE)
 
-![그림2](picture02.png)
+![그림2](https://github.com/CHWON-KR/self/blob/master/picture02.PNG)
