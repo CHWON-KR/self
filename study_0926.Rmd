@@ -1,0 +1,89 @@
+---
+title: "등급 분포 산출"
+author: "원치환"
+date: "2017년 9월 26일"
+output: html_document
+---
+
+## 1.Compressed된 SAS데이터셋 가져오기
+1)패키지 haven 설치
+
+2)특성항목, 등급, 타겟 정보가 있는 SAS데이터셋을 R데이터셋으로 생성
+
+```{r, echo=TRUE, eval=FALSE}
+library(haven)
+library(sas7bdat)
+
+data_1 <- read_sas("C:/Users/user/Desktop/r_sas/crdt_seg2_md5.sas7bdat")
+```
+
+## 2.테이블에서 요약통계량 산출하기
+1)패키지 dplyr 설치
+
+```{r, echo=TRUE, eval=FALSE}
+install.packages("dplyr")
+library(dplyr)
+```
+
+2)사용할 컬럼만 추출
+
+"dplyr"패키지를 이용하여 등급별 우불량 구성비 생성
+
+```{r, echo=TRUE, eval=FALSE}
+#dplyr문법 : 데이터셋 %>% 명령어 (select, filter, mutate등 )
+good <- data_1 %>% select(TARGET,최종등급_4) %>% filter(TARGET==0) #우량추출
+bad <- data_1 %>% select(TARGET,최종등급_4) %>% filter(TARGET==1) #불량추출
+intm <- data_1 %>% select(TARGET,최종등급_4) %>% filter(TARGET==2) #미정추출
+```
+
+3)등급별 건수 계산
+```{r, echo=TRUE, eval=FALSE}
+#등급별 건수 계산
+g_sum <- count(good,최종등급_4)
+b_sum <- count(bad,최종등급_4)
+i_sum <- count(intm,최종등급_4)
+
+grd<-data.frame(c(g_sum,b_sum[,2],i_sum[,2])) #추출한 벡터를 데이터셋으포 생성
+grd<-rename(grd, good=n, bad=n.1, int=n.2) #변수 이름 재생성
+```
+
+- 테이블 생성 결과
+
+![그림1](picture01.png)
+
+4)등급별 구성비 및 지표 생성
+
+```{r, echo=TRUE, eval=FALSE}
+##구성비 컬럼 생성
+grd1<- grd %>% mutate(tot=good+bad+int
+                     ,g_rate=good/sum(good)
+                     ,b_rate=bad/sum(bad)
+                     ,i_rate=int/sum(int)
+                     ,t_rate=tot/sum(tot)
+                     ,bad_rate=bad/tot
+                      )
+##전체합 로우 생성
+grd2 <- bind_rows(grd1
+                 ,grd1 %>% summarise(good=sum(good)
+                                    ,bad=sum(bad)
+                                    ,int=sum(int)
+                                    ,tot=sum(tot)
+                                    ,g_rate=sum(g_rate)
+                                    ,b_rate=sum(b_rate)
+                                    ,i_rate=sum(i_rate)
+                                    ,t_rate=sum(t_rate)
+                                     )
+                  )
+## 각종 지표 생성
+grd3 <- grd2 %>% mutate(g_cum=cumsum(g_rate)
+                       ,b_cum=cumsum(b_rate)
+                       ,ks=g_cum-b_cum
+                       ,ks_f=max(ks)
+                       ,or=g_rate/b_rate
+                       ,woe=log(or)*100
+                       )
+```
+
+- 테이블 생성 결과 (KS & WOE)
+
+![그림2](picture02.png)
