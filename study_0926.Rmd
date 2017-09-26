@@ -49,7 +49,7 @@ grd<-rename(grd, good=n, bad=n.1, int=n.2) #변수 이름 재생성
 
 - 테이블 생성 결과
 
-![그림1](picture01.png)
+![그림1](https://github.com/CHWON-KR/self/blob/master/picture01.PNG)
 
 4)등급별 구성비 및 지표 생성
 
