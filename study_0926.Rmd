@@ -32,8 +32,9 @@ library(dplyr)
 -TARGET과 최종등급 컬럼만 이용
 
 ```{r, echo=TRUE, eval=FALSE}
-#dplyr문법 : 데이터셋 %>% 명령어 (select, filter, mutate등 )
-#%>% : select(data,TARGET) = data %>% select(TARGET) 
+#%>% : %>% 기준 앞쪽이 뒤쪽의 대상 컬럼 또는 테이블이 됨 ,순차적인 흐름 파악가능 
+#예) select(data,TARGET) = data %>% select(TARGET) 
+
 good <- data_1 %>% select(TARGET,최종등급_4) %>% filter(TARGET==0) #우량추출
 bad <- data_1 %>% select(TARGET,최종등급_4) %>% filter(TARGET==1) #불량추출
 intm <- data_1 %>% select(TARGET,최종등급_4) %>% filter(TARGET==2) #미정추출
