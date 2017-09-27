@@ -28,7 +28,9 @@ library(dplyr)
 2)사용할 컬럼만 추출
 
 -"dplyr"패키지를 이용하여 등급별 우불량 구성비 생성
-- TARGET 
+
+-TARGET과 최종등급 컬럼만 이용
+
 ```{r, echo=TRUE, eval=FALSE}
 #dplyr문법 : 데이터셋 %>% 명령어 (select, filter, mutate등 )
 #%>% : select(data,TARGET) = data %>% select(TARGET) 
