@@ -46,6 +46,21 @@ i_sum <- count(intm,최종등급_4)
 
 grd<-data.frame(c(g_sum,b_sum[,2],i_sum[,2])) #추출한 벡터를 데이터셋으포 생성
 grd<-rename(grd, good=n, bad=n.1, int=n.2) #변수 이름 재생성
+
+
+## 09.27. dplyr 함수 이용한 등급별 건수 산출 추가
+grd2<- data.frame(data_1 %>%
+                  select(최종등급_4, TARGET) %>% 
+                  mutate(good=ifelse(TARGET==0,1,0)
+                        ,bad=ifelse(TARGET==1,1,0)
+                        ,int=ifelse(TARGET==2,1,0)) %>% 
+                  group_by(최종등급_4) %>%
+                  summarise(t=n()
+                           ,g=sum(good)
+                           ,b=sum(bad)
+                           ,i=sum(int))
+                  )
+
 ```
 
 - 테이블 생성 결과
